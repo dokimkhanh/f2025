@@ -1,5 +1,6 @@
-
 import { Link } from "react-router-dom";
+import ProductCard from "../components/product/ProductCard";
+import Header from "../components/layout/Header";
 // import { ArrowRightIcon } from "@heroicons/react/outline";
 
 // Mock data
@@ -10,7 +11,8 @@ const featuredProducts = [
     category: "Áo sơ mi",
     price: 850000,
     originalPrice: 1200000,
-    image: "/images/products/product-1.jpg",
+    image:
+      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
     isNew: true,
     discount: 30,
   },
@@ -19,7 +21,8 @@ const featuredProducts = [
     name: "Quần jeans slim fit",
     category: "Quần jeans",
     price: 750000,
-    image: "/images/products/product-2.jpg",
+    image:
+      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
     isNew: false,
     discount: null,
   },
@@ -29,7 +32,8 @@ const featuredProducts = [
     category: "Áo khoác",
     price: 1250000,
     originalPrice: 1500000,
-    image: "/images/products/product-3.jpg",
+    image:
+      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
     isNew: true,
     discount: 15,
   },
@@ -38,7 +42,8 @@ const featuredProducts = [
     name: "Váy liền thân dáng suông",
     category: "Váy",
     price: 950000,
-    image: "/images/products/product-4.jpg",
+    image:
+      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
     isNew: false,
     discount: null,
   },
@@ -48,7 +53,8 @@ const featuredProducts = [
     category: "Áo thun",
     price: 450000,
     originalPrice: 550000,
-    image: "/images/products/product-5.jpg",
+    image:
+      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
     isNew: false,
     discount: 20,
   },
@@ -57,7 +63,8 @@ const featuredProducts = [
     name: "Quần tây âu công sở",
     category: "Quần tây",
     price: 650000,
-    image: "/images/products/product-6.jpg",
+    image:
+      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
     isNew: false,
     discount: null,
   },
@@ -66,7 +73,8 @@ const featuredProducts = [
     name: "Áo polo thể thao",
     category: "Áo polo",
     price: 550000,
-    image: "/images/products/product-7.jpg",
+    image:
+      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
     isNew: true,
     discount: null,
   },
@@ -76,25 +84,39 @@ const featuredProducts = [
     category: "Chân váy",
     price: 450000,
     originalPrice: 600000,
-    image: "/images/products/product-8.jpg",
+    image:
+      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
     isNew: false,
     discount: 25,
   },
 ];
 
 const categories = [
-  { id: 1, name: "Áo", image: "/images/categories/category-1.jpg", count: 120 },
+  {
+    id: 1,
+    name: "Áo",
+    image: "https://i.ibb.co/r2L17d5V/home-category-1-img.jpg",
+    count: 120,
+  },
   {
     id: 2,
     name: "Quần",
-    image: "/images/categories/category-2.jpg",
+    image:
+      "https://theme.hstatic.net/200000690725/1001078549/14/home_category_4_img.jpg?v=666",
     count: 85,
   },
-  { id: 3, name: "Đầm", image: "/images/categories/category-3.jpg", count: 64 },
+  {
+    id: 3,
+    name: "Đầm",
+    image:
+      "https://theme.hstatic.net/200000690725/1001078549/14/home_category_5_img.jpg?v=666",
+    count: 64,
+  },
   {
     id: 4,
     name: "Phụ kiện",
-    image: "/images/categories/category-4.jpg",
+    image:
+      "https://theme.hstatic.net/200000690725/1001078549/14/home_category_6_img.jpg?v=666",
     count: 36,
   },
 ];
@@ -104,103 +126,17 @@ const collections = [
     id: 1,
     name: "Bộ sưu tập Xuân Hè 2025",
     description: "Tươi mới, nhẹ nhàng và đầy sức sống",
-    image: "/images/collections/collection-1.jpg",
+    image: "https://i.ibb.co/p61Q0rFW/home-set-combo-1-img.png",
     buttonText: "Khám phá ngay",
   },
   {
     id: 2,
     name: "Thời trang công sở",
     description: "Lịch lãm, chuyên nghiệp và tinh tế",
-    image: "/images/collections/collection-2.jpg",
+    image: "https://i.ibb.co/p61Q0rFW/home-set-combo-1-img.png",
     buttonText: "Xem thêm",
   },
 ];
-
-// ProductCard component
-const ProductCard = ({ product }) => {
-  return (
-    <div className="group relative">
-      {/* Product Image */}
-      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-100">
-        <Link to={`/product/${product.id}`}>
-          <img
-            src={product.image}
-            alt={product.name}
-            className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
-          />
-        </Link>
-
-        {/* Quick actions */}
-        <div className="absolute bottom-4 left-0 right-0 flex justify-center opacity-0 transition-opacity group-hover:opacity-100">
-          <div className="flex space-x-2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md">
-            <button className="p-2 rounded-full hover:bg-gray-100">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </svg>
-            </button>
-            <button className="p-2 rounded-full hover:bg-gray-100">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Badge */}
-        {product.isNew && (
-          <span className="absolute top-2 left-2 bg-primary-600 text-white text-xs px-2 py-1 rounded">
-            Mới
-          </span>
-        )}
-        {product.discount && (
-          <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-            -{product.discount}%
-          </span>
-        )}
-      </div>
-
-      {/* Product Info */}
-      <div className="mt-4">
-        <h3 className="text-sm font-medium text-gray-700">
-          <Link to={`/product/${product.id}`}>{product.name}</Link>
-        </h3>
-        <p className="mt-1 text-sm text-gray-500">{product.category}</p>
-        <div className="mt-1 flex items-center">
-          {product.originalPrice && (
-            <span className="text-sm text-gray-500 line-through mr-2">
-              {product.originalPrice.toLocaleString("vi-VN")}₫
-            </span>
-          )}
-          <span className="text-sm font-medium text-gray-900">
-            {product.price.toLocaleString("vi-VN")}₫
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const Home = () => {
   return (
@@ -209,7 +145,7 @@ const Home = () => {
       <section className="relative h-[80vh] bg-gray-100">
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30 z-10" />
         <img
-          src="/images/banners/hero-banner.jpg"
+          src="https://theme.hstatic.net/200000690725/1001078549/14/slide_1_img.jpg?v=666"
           alt="Fashion 2025"
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -223,12 +159,15 @@ const Home = () => {
               cấp và phong cách độc đáo.
             </p>
             <div className="flex space-x-4">
-              <Link to="/shop" className="btn btn-primary px-8 py-3">
+              <Link
+                to="/shop"
+                className="inline-block bg-white text-gray-900 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors w-fit"
+              >
                 Mua sắm ngay
               </Link>
               <Link
                 to="/collections"
-                className="btn btn-outline bg-white/20 text-white border-white/40 px-8 py-3 hover:bg-white/30"
+                className="inline-block bg-white text-gray-900 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors w-fit"
               >
                 Bộ sưu tập
               </Link>
@@ -343,13 +282,13 @@ const Home = () => {
       </section>
 
       {/* Newsletter */}
-      <section className="py-16 bg-primary-600 text-white">
+      <section className="py-16 bg-primary-600 text-black-200">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-display font-bold mb-4">
               Đăng ký nhận thông tin
             </h2>
-            <p className="text-white/90 mb-8">
+            <p className="text-black-200/90 mb-8">
               Nhận thông tin về bộ sưu tập mới và ưu đãi đặc biệt trước khi mọi
               người.
             </p>
@@ -357,11 +296,11 @@ const Home = () => {
               <input
                 type="email"
                 placeholder="Địa chỉ email của bạn"
-                className="flex-1 px-4 py-3 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-white"
+                className="flex-1 px-4 py-3 rounded-md text-black ring-1 hover:bg-gray-100 focus:outline-none  focus:ring-2 focus:ring-black"
               />
               <button
                 type="submit"
-                className="bg-white text-primary-600 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors"
+                className="bg-white text-primary-600 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors border border-black"
               >
                 Đăng ký
               </button>

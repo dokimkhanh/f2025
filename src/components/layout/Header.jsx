@@ -1,18 +1,35 @@
 // src/components/layout/Header.jsx
-import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { ShoppingBagIcon, UserIcon, MenuIcon, SearchIcon, XIcon } from '@heroicons/react/outline';
+import {
+  ShoppingBagIcon,
+  UserIcon,
+  Bars3Icon as MenuIcon,
+  MagnifyingGlassIcon as SearchIcon,
+  XMarkIcon as XIcon
+} from '@heroicons/react/24/outline';
+import { toggleMenu, selectIsMenuOpen } from '../../redux/features/menuSlice';
+import { selectCartTotalQuantity } from '../../redux/features/cartSlice';
+// Update this import to directly access the cart state
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
+  const dispatch = useDispatch();
+  const isMenuOpen = useSelector(selectIsMenuOpen);
+  // Access the cart totalQuantity directly from the state
+  const cartQuantity = useSelector((state) => state.cart.totalQuantity);
+  console.log('Cart quantity:', cartQuantity);
+
+  const handleToggleMenu = () => {
+    dispatch(toggleMenu());
+  };
+
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="font-display text-2xl font-bold">FASHION<span className="text-primary-600">2025</span></Link>
-          
+
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
             <Link to="/" className="font-medium hover:text-primary-600 transition-colors">Trang chủ</Link>
@@ -21,7 +38,7 @@ const Header = () => {
             <Link to="/about" className="font-medium hover:text-primary-600 transition-colors">Giới thiệu</Link>
             <Link to="/contact" className="font-medium hover:text-primary-600 transition-colors">Liên hệ</Link>
           </nav>
-          
+
           {/* Icons */}
           <div className="flex items-center space-x-4">
             <button className="p-2 hover:text-primary-600 transition-colors">
@@ -32,17 +49,21 @@ const Header = () => {
             </Link>
             <Link to="/cart" className="p-2 hover:text-primary-600 transition-colors relative">
               <ShoppingBagIcon className="h-6 w-6" />
-              <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+              {cartQuantity > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center z-10">
+                  {cartQuantity}
+                </span>
+              )}
             </Link>
-            <button 
+            <button
               className="p-2 md:hidden hover:text-primary-600 transition-colors"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={handleToggleMenu}
             >
               {isMenuOpen ? <XIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
             </button>
           </div>
         </div>
-        
+
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4">
