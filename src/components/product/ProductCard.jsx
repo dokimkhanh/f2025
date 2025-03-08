@@ -2,13 +2,34 @@
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
+  // Get the lowest price from sizes array
+  const getLowestPrice = () => {
+    if (!product.sizes || product.sizes.length === 0) return 0;
+    return Math.min(...product.sizes.map(size => size.price));
+  };
+
+  // Get the highest price from sizes array
+  const getHighestPrice = () => {
+    if (!product.sizes || product.sizes.length === 0) return 0;
+    return Math.max(...product.sizes.map(size => size.price));
+  };
+
+  const lowestPrice = getLowestPrice();
+  const highestPrice = getHighestPrice();
+  const hasPriceRange = lowestPrice !== highestPrice;
+
+  // Get the first image from sizes array
+  const productImage = product.sizes && product.sizes.length > 0 
+    ? product.sizes[0].imageUrl 
+    : 'https://via.placeholder.com/300';
+
   return (
     <div className="group relative">
       {/* Product Image */}
       <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-100">
-        <Link to={`/product/${product.id}`}>
+        <Link to={`/product/${product.slug}`}>
           <img
-            src={product.image}
+            src={productImage}
             alt={product.name}
             className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
           />
@@ -52,15 +73,10 @@ const ProductCard = ({ product }) => {
           </div>
         </div>
 
-        {/* Badge */}
-        {product.isNew && (
+        {/* Badge - using createdAt to determine if product is new (within 7 days) */}
+        {new Date(product.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) && (
           <span className="absolute top-2 left-2 bg-primary-600 text-white text-xs px-2 py-1 rounded">
             Mới
-          </span>
-        )}
-        {product.discount && (
-          <span className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-            -{product.discount}%
           </span>
         )}
       </div>
@@ -68,18 +84,21 @@ const ProductCard = ({ product }) => {
       {/* Product Info */}
       <div className="mt-4">
         <h3 className="text-sm font-medium text-gray-700">
-          <Link to={`/product/${product.id}`}>{product.name}</Link>
+          <Link to={`/product/${product.slug}`}>{product.name}</Link>
         </h3>
-        <p className="mt-1 text-sm text-gray-500">{product.category}</p>
+        <p className="mt-1 text-sm text-gray-500">
+          {product.category?.name || "Không phân loại"}
+        </p>
         <div className="mt-1 flex items-center">
-          {product.originalPrice && (
-            <span className="text-sm text-gray-500 line-through mr-2">
-              {product.originalPrice.toLocaleString("vi-VN")}₫
+          {hasPriceRange ? (
+            <span className="text-sm font-medium text-gray-900">
+              {lowestPrice.toLocaleString("vi-VN")}₫ - {highestPrice.toLocaleString("vi-VN")}₫
+            </span>
+          ) : (
+            <span className="text-sm font-medium text-gray-900">
+              {lowestPrice.toLocaleString("vi-VN")}₫
             </span>
           )}
-          <span className="text-sm font-medium text-gray-900">
-            {product.price.toLocaleString("vi-VN")}₫
-          </span>
         </div>
       </div>
     </div>

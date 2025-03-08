@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ListAllProduct } from '../../services/product';
 
 // Async thunk for fetching a single product
 export const fetchProductById = createAsyncThunk(
@@ -7,7 +8,7 @@ export const fetchProductById = createAsyncThunk(
     // In a real app, replace this with an actual API call
     // const response = await fetch(`/api/products/${id}`);
     // return response.json();
-    
+
     // Mock data for demonstration
     return {
       id,
@@ -34,6 +35,7 @@ const productSlice = createSlice({
     currentProduct: null,
     loading: false,
     error: null,
+    products: []
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -50,7 +52,25 @@ const productSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       });
+    builder
+      .addCase(GetAllProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(GetAllProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products = action.payload;
+      })
+      .addCase(GetAllProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
   },
 });
+
+export const GetAllProduct = createAsyncThunk('product/getall', async () => {
+  const res = await ListAllProduct()
+  return res.products
+})
 
 export default productSlice.reducer;

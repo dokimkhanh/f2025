@@ -1,144 +1,48 @@
 import { Link } from "react-router-dom";
 import ProductCard from "../components/product/ProductCard";
-import Header from "../components/layout/Header";
-// import { ArrowRightIcon } from "@heroicons/react/outline";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState, useRef } from "react";
 
-// Mock data
-const featuredProducts = [
-  {
-    id: 1,
-    name: "Áo sơ mi linen cao cấp",
-    category: "Áo sơ mi",
-    price: 850000,
-    originalPrice: 1200000,
-    image:
-      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
-    isNew: true,
-    discount: 30,
-  },
-  {
-    id: 2,
-    name: "Quần jeans slim fit",
-    category: "Quần jeans",
-    price: 750000,
-    image:
-      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
-    isNew: false,
-    discount: null,
-  },
-  {
-    id: 3,
-    name: "Áo khoác bomber",
-    category: "Áo khoác",
-    price: 1250000,
-    originalPrice: 1500000,
-    image:
-      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
-    isNew: true,
-    discount: 15,
-  },
-  {
-    id: 4,
-    name: "Váy liền thân dáng suông",
-    category: "Váy",
-    price: 950000,
-    image:
-      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
-    isNew: false,
-    discount: null,
-  },
-  {
-    id: 5,
-    name: "Áo thun cotton premium",
-    category: "Áo thun",
-    price: 450000,
-    originalPrice: 550000,
-    image:
-      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
-    isNew: false,
-    discount: 20,
-  },
-  {
-    id: 6,
-    name: "Quần tây âu công sở",
-    category: "Quần tây",
-    price: 650000,
-    image:
-      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
-    isNew: false,
-    discount: null,
-  },
-  {
-    id: 7,
-    name: "Áo polo thể thao",
-    category: "Áo polo",
-    price: 550000,
-    image:
-      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
-    isNew: true,
-    discount: null,
-  },
-  {
-    id: 8,
-    name: "Chân váy xếp ly",
-    category: "Chân váy",
-    price: 450000,
-    originalPrice: 600000,
-    image:
-      "https://i.ibb.co/5xfRVrSg/54099335584-5b22d198e9-c-5111716a79a24f28a4fb706cfa1dceee-master.jpg",
-    isNew: false,
-    discount: 25,
-  },
-];
-
-const categories = [
-  {
-    id: 1,
-    name: "Áo",
-    image: "https://i.ibb.co/r2L17d5V/home-category-1-img.jpg",
-    count: 120,
-  },
-  {
-    id: 2,
-    name: "Quần",
-    image:
-      "https://theme.hstatic.net/200000690725/1001078549/14/home_category_4_img.jpg?v=666",
-    count: 85,
-  },
-  {
-    id: 3,
-    name: "Đầm",
-    image:
-      "https://theme.hstatic.net/200000690725/1001078549/14/home_category_5_img.jpg?v=666",
-    count: 64,
-  },
-  {
-    id: 4,
-    name: "Phụ kiện",
-    image:
-      "https://theme.hstatic.net/200000690725/1001078549/14/home_category_6_img.jpg?v=666",
-    count: 36,
-  },
-];
-
-const collections = [
-  {
-    id: 1,
-    name: "Bộ sưu tập Xuân Hè 2025",
-    description: "Tươi mới, nhẹ nhàng và đầy sức sống",
-    image: "https://i.ibb.co/p61Q0rFW/home-set-combo-1-img.png",
-    buttonText: "Khám phá ngay",
-  },
-  {
-    id: 2,
-    name: "Thời trang công sở",
-    description: "Lịch lãm, chuyên nghiệp và tinh tế",
-    image: "https://i.ibb.co/p61Q0rFW/home-set-combo-1-img.png",
-    buttonText: "Xem thêm",
-  },
-];
+import { GetAllProduct } from "../redux/slices/productSlice";
+import { GetAllCategories } from "../redux/slices/categorySlice";
 
 const Home = () => {
+  const productSelector = useSelector((state) => state.product.products);
+  const { categories, loading: categoryLoading } = useSelector((state) => state.category);
+
+  const dispatch = useDispatch();
+  const [categoryStartIndex, setCategoryStartIndex] = useState(0);
+  useEffect(() => {
+    getAllProduct();
+    getAllCategories();
+  }, []);
+
+  const getAllProduct = () => {
+    dispatch(GetAllProduct());
+  };
+
+  const getAllCategories = () => {
+    dispatch(GetAllCategories());
+  };
+
+  const nextCategories = () => {
+    if (categories && categoryStartIndex + 4 < categories.length) {
+      setCategoryStartIndex(categoryStartIndex + 1);
+    }
+  };
+
+  const prevCategories = () => {
+    if (categoryStartIndex > 0) {
+      setCategoryStartIndex(categoryStartIndex - 1);
+    }
+  };
+
+  const categoriesContainerRef = useRef(null);
+
+  // Check if navigation buttons should be enabled
+  const hasNextCategories = categories && categoryStartIndex + 4 < categories.length;
+  const hasPrevCategories = categoryStartIndex > 0;
+
   return (
     <div>
       {/* Hero Section */}
@@ -179,33 +83,77 @@ const Home = () => {
       {/* Categories */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-display font-bold text-center mb-12">
-            Danh mục sản phẩm
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {categories.map((category) => (
-              <Link
-                key={category.id}
-                to={`/category/${category.id}`}
-                className="group relative overflow-hidden rounded-lg"
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-display font-bold">
+              Danh mục sản phẩm
+            </h2>
+            <div className="flex space-x-2">
+              <button
+                onClick={prevCategories}
+                disabled={!hasPrevCategories}
+                className={`w-10 h-10 rounded-full flex items-center justify-center border border-gray-300 
+                  ${hasPrevCategories ? 'hover:bg-gray-100 text-gray-700' : 'text-gray-300 cursor-not-allowed'} transition-all duration-300`}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </button>
+              <button
+                onClick={nextCategories}
+                disabled={!hasNextCategories}
+                className={`w-10 h-10 rounded-full flex items-center justify-center border border-gray-300 
+                  ${hasNextCategories ? 'hover:bg-gray-100 text-gray-700' : 'text-gray-300 cursor-not-allowed'} transition-all duration-300`}
               >
-                <div className="aspect-w-1 aspect-h-1">
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-4">
-                  <h3 className="text-xl font-medium text-white">
-                    {category.name}
-                  </h3>
-                  <p className="text-sm text-white/80">
-                    {category.count} sản phẩm
-                  </p>
-                </div>
-              </Link>
-            ))}
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div className="overflow-hidden">
+            <div
+              ref={categoriesContainerRef}
+              className="grid grid-cols-2 md:grid-cols-4 gap-6 transition-transform duration-700 ease-in-out"
+              style={{
+                transform: `translateX(-${categoryStartIndex * (100 / 4)}%)`,
+                display: 'grid',
+                gridTemplateColumns: `repeat(${categories ? categories.length : 4}, minmax(0, 1fr))`,
+                width: `${categories ? (categories.length / 4) * 100 : 100}%`
+              }}
+            >
+              {categoryLoading ? (
+                // Loading skeleton
+                Array(4).fill(0).map((_, index) => (
+                  <div key={index} className="relative overflow-hidden rounded-lg bg-gray-200 animate-pulse">
+                    <div className="aspect-w-1 aspect-h-1"></div>
+                  </div>
+                ))
+              ) : (
+                categories && categories.map((category) => (
+                  <Link
+                    key={category._id}
+                    to={`/category/${category.slug}`}
+                    className="group relative overflow-hidden rounded-lg transition-all duration-500 ease-in-out"
+                  >
+                    <div className="aspect-w-1 aspect-h-1">
+                      <img
+                        src={category.image}
+                        alt={category.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-4">
+                      <h3 className="text-xl font-medium text-white">
+                        {category.name}
+                      </h3>
+                      <p className="text-sm text-white/80">
+                        {category.description}
+                      </p>
+                    </div>
+                  </Link>
+                ))
+              )}
+            </div>
           </div>
         </div>
       </section>
@@ -237,49 +185,51 @@ const Home = () => {
             </Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {featuredProducts.slice(0, 8).map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {productSelector.slice(0, 8).map((product) => (
+              <ProductCard key={product._id} product={product} />
             ))}
           </div>
         </div>
       </section>
 
       {/* Collections */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-display font-bold text-center mb-12">
-            Bộ sưu tập mới
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            {collections.map((collection) => (
-              <div
-                key={collection.id}
-                className="relative overflow-hidden rounded-lg group"
-              >
-                <div className="aspect-w-16 aspect-h-9">
-                  <img
-                    src={collection.image}
-                    alt={collection.name}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
+      {categories && categories.length >= 2 && (
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-display font-bold text-center mb-12">
+              Bộ sưu tập mới
+            </h2>
+            <div className="grid md:grid-cols-2 gap-8">
+              {categories.slice(0, 2).map((category) => (
+                <div
+                  key={category._id}
+                  className="relative overflow-hidden rounded-lg group"
+                >
+                  <div className="aspect-w-16 aspect-h-9">
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-6 md:p-8">
+                    <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-2">
+                      {category.name}
+                    </h3>
+                    <p className="text-white/80 mb-4">{category.description}</p>
+                    <Link
+                      to={`/category/${category.slug}`}
+                      className="inline-block bg-white text-gray-900 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors w-fit"
+                    >
+                      Khám phá ngay
+                    </Link>
+                  </div>
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-6 md:p-8">
-                  <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-2">
-                    {collection.name}
-                  </h3>
-                  <p className="text-white/80 mb-4">{collection.description}</p>
-                  <Link
-                    to={`/collection/${collection.id}`}
-                    className="inline-block bg-white text-gray-900 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors w-fit"
-                  >
-                    {collection.buttonText}
-                  </Link>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Newsletter */}
       <section className="py-16 bg-primary-600 text-black-200">
@@ -414,39 +364,49 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((item) => (
-              <a
-                key={item}
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative overflow-hidden"
-              >
-                <div className="aspect-w-1 aspect-h-1">
-                  <img
-                    src={`/images/instagram/insta-${item}.jpg`}
-                    alt={`Instagram post ${item}`}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-8 w-8 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+            {[1, 2, 3, 4, 5, 6].map((item) => {
+              // Map each item to a specific image URL
+              const imageUrl = item === 1 ? "https://i.ibb.co/6cHHGQk0/image.png" :
+                item === 2 ? "https://i.ibb.co/WvVCgdrN/image.png" :
+                  item === 3 ? "https://i.ibb.co/G3QC8LM7/image.png" :
+                    item === 4 ? "https://i.ibb.co/mP8rQ9x/image.png" :
+                      item === 5 ? "https://i.ibb.co/Cp49xrCv/image.png" :
+                        "https://i.ibb.co/V5gVD8d/image.png";
+
+              return (
+                <a
+                  key={item}
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative overflow-hidden"
+                >
+                  <div className="aspect-w-1 aspect-h-1">
+                    <img
+                      src={imageUrl}
+                      alt={`Instagram post ${item}`}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                  </svg>
-                </div>
-              </a>
-            ))}
+                  </div>
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-8 w-8 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      />
+                    </svg>
+                  </div>
+                </a>
+              );
+            })}
           </div>
 
           <div className="text-center mt-8">
@@ -504,7 +464,7 @@ const Home = () => {
               </p>
               <div className="flex items-center">
                 <img
-                  src="/images/testimonials/avatar-1.jpg"
+                  src="https://randomuser.me/api/portraits/men/32.jpg"
                   alt="Nguyễn Văn A"
                   className="w-10 h-10 rounded-full object-cover mr-3"
                 />
@@ -533,12 +493,12 @@ const Home = () => {
               </div>
               <p className="text-gray-600 mb-4">
                 "Thiết kế thời trang và hiện đại, phù hợp với xu hướng. Tôi đặc
-                biệt thích bộ sưu tập mới nhất của shop, rất phù hợp với phong
+                biệt thich bộ sưu tập mới nhất của shop, rất phù hợp với phong
                 cách của tôi."
               </p>
               <div className="flex items-center">
                 <img
-                  src="/images/testimonials/avatar-2.jpg"
+                  src="https://randomuser.me/api/portraits/women/44.jpg"
                   alt="Trần Thị B"
                   className="w-10 h-10 rounded-full object-cover mr-3"
                 />
@@ -572,7 +532,7 @@ const Home = () => {
               </p>
               <div className="flex items-center">
                 <img
-                  src="/images/testimonials/avatar-3.jpg"
+                  src="https://randomuser.me/api/portraits/men/67.jpg"
                   alt="Lê Văn C"
                   className="w-10 h-10 rounded-full object-cover mr-3"
                 />
@@ -617,7 +577,7 @@ const Home = () => {
             <article className="bg-white rounded-lg overflow-hidden shadow-sm">
               <Link to="/blog/1" className="block overflow-hidden">
                 <img
-                  src="/images/blog/blog-1.jpg"
+                  src="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
                   alt="Xu hướng thời trang 2025"
                   className="w-full h-60 object-cover transition-transform duration-500 hover:scale-110"
                 />
@@ -664,7 +624,7 @@ const Home = () => {
             <article className="bg-white rounded-lg overflow-hidden shadow-sm">
               <Link to="/blog/2" className="block overflow-hidden">
                 <img
-                  src="/images/blog/blog-2.jpg"
+                  src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
                   alt="Cách phối đồ mùa hè"
                   className="w-full h-60 object-cover transition-transform duration-500 hover:scale-110"
                 />
@@ -711,7 +671,7 @@ const Home = () => {
             <article className="bg-white rounded-lg overflow-hidden shadow-sm">
               <Link to="/blog/3" className="block overflow-hidden">
                 <img
-                  src="/images/blog/blog-3.jpg"
+                  src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
                   alt="Chăm sóc quần áo"
                   className="w-full h-60 object-cover transition-transform duration-500 hover:scale-110"
                 />
@@ -757,7 +717,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
       {/* Brands */}
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
@@ -765,27 +724,57 @@ const Home = () => {
             Thương hiệu đối tác
           </h2>
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
-            {[1, 2, 3, 4, 5, 6].map((brand) => (
-              <div
-                key={brand}
-                className="grayscale hover:grayscale-0 transition-all duration-300"
-              >
-                <img
-                  src={`/images/brands/brand-${brand}.svg`}
-                  alt={`Brand ${brand}`}
-                  className="h-12 md:h-16"
-                />
-              </div>
-            ))}
+            {/* Using placeholder brand logos that are copyright-free */}
+            <div className="grayscale hover:grayscale-0 transition-all duration-300">
+              <img
+                src="https://placehold.co/200x80/e2e8f0/64748b?text=Brand+One"
+                alt="Fashion Partner"
+                className="h-12 md:h-16"
+              />
+            </div>
+            <div className="grayscale hover:grayscale-0 transition-all duration-300">
+              <img
+                src="https://placehold.co/200x80/e2e8f0/64748b?text=Brand+Two"
+                alt="Style Co."
+                className="h-12 md:h-16"
+              />
+            </div>
+            <div className="grayscale hover:grayscale-0 transition-all duration-300">
+              <img
+                src="https://placehold.co/200x80/e2e8f0/64748b?text=Brand+Three"
+                alt="Trend Mode"
+                className="h-12 md:h-16"
+              />
+            </div>
+            <div className="grayscale hover:grayscale-0 transition-all duration-300">
+              <img
+                src="https://placehold.co/200x80/e2e8f0/64748b?text=Brand+Four"
+                alt="Fashion Hub"
+                className="h-12 md:h-16"
+              />
+            </div>
+            <div className="grayscale hover:grayscale-0 transition-all duration-300">
+              <img
+                src="https://placehold.co/200x80/e2e8f0/64748b?text=Brand+Five"
+                alt="Elegant Wear"
+                className="h-12 md:h-16"
+              />
+            </div>
+            <div className="grayscale hover:grayscale-0 transition-all duration-300">
+              <img
+                src="https://placehold.co/200x80/e2e8f0/64748b?text=Brand+Six"
+                alt="Modern Apparel"
+                className="h-12 md:h-16"
+              />
+            </div>
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="relative py-20 bg-gray-900 text-white">
         <div className="absolute inset-0 opacity-20">
           <img
-            src="/images/banners/cta-background.jpg"
+            src="https://i.ibb.co/20dHSBjH/image.png"
             alt="Background"
             className="w-full h-full object-cover"
           />
