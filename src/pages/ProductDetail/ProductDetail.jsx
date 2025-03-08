@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../../redux/slices/cartSlice';
 import RelatedProducts from '../../components/product/RelatedProducts'
@@ -24,6 +24,7 @@ const ProductDetail = () => {
             try {
                 setLoading(true);
                 const data = await GetProductBySlug(slug);
+            
                 setProduct(data);
                 // Nếu có sizes, chọn size đầu tiên làm mặc định
                 if (data.sizes && data.sizes.length > 0) {
@@ -94,6 +95,37 @@ const ProductDetail = () => {
 
     return (
         <div className="container mx-auto px-4 py-8">
+            {/* Breadcrumb */}
+            {product && (
+                <nav className="flex mb-6 text-sm">
+                    <ol className="flex items-center space-x-1">
+                        <li>
+                            <Link to="/" className="text-gray-500 hover:text-gray-900">
+                                Trang chủ
+                            </Link>
+                        </li>
+                        <li className="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                        </li>
+                        <li>
+                            <Link to={`/category/${product.category.slug}`} className="text-gray-500 hover:text-gray-900">
+                                {product.category ? product.category.name : 'Danh mục'}
+                            </Link>
+                        </li>
+                        <li className="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                        </li>
+                        <li>
+                            <span className="text-gray-900 font-medium">{product.name}</span>
+                        </li>
+                    </ol>
+                </nav>
+            )}
+            
             <div className="flex flex-col md:flex-row gap-8">
                 {/* Product Images */}
                 <div className="md:w-1/2">
