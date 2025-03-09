@@ -6,11 +6,12 @@ import {
   UserIcon,
   Bars3Icon as MenuIcon,
   MagnifyingGlassIcon as SearchIcon,
-  XMarkIcon as XIcon
+  XMarkIcon as XIcon,
+  LockClosedIcon
 } from '@heroicons/react/24/outline';
 import { toggleMenu, selectIsMenuOpen } from '../../redux/features/menuSlice';
 import { selectCartTotalQuantity } from '../../redux/features/cartSlice';
-// Update this import to directly access the cart state
+import { selectIsAuthenticated } from '../../redux/features/authSlice';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,8 @@ const Header = () => {
   // Access the cart totalQuantity directly from the state
   const cartQuantity = useSelector((state) => state.cart.totalQuantity);
   console.log('Cart quantity:', cartQuantity);
+
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   const handleToggleMenu = () => {
     dispatch(toggleMenu());
@@ -44,8 +47,12 @@ const Header = () => {
             <button className="p-2 hover:text-primary-600 transition-colors">
               <SearchIcon className="h-6 w-6" />
             </button>
-            <Link to="/account" className="p-2 hover:text-primary-600 transition-colors">
-              <UserIcon className="h-6 w-6" />
+            <Link to={isAuthenticated ? "/account" : "/login"} className="p-2 hover:text-primary-600 transition-colors">
+              {isAuthenticated ? (
+                <UserIcon className="h-6 w-6" />
+              ) : (
+                <LockClosedIcon className="h-6 w-6" />
+              )}
             </Link>
             <Link to="/cart" className="p-2 hover:text-primary-600 transition-colors relative">
               <ShoppingBagIcon className="h-6 w-6" />
