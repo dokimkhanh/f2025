@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../utils/axiosConfig';
 
-// Thunk để đăng nhập
+// Thunk đăng nhập
 export const loginUser = createAsyncThunk(
     'auth/login',
     async (credentials, { rejectWithValue }) => {
@@ -17,7 +17,18 @@ export const loginUser = createAsyncThunk(
     }
 );
 
-// Thunk để lấy thông tin người dùng từ token
+export const registerUser = createAsyncThunk(
+    'auth/register',
+    async (userData, { rejectWithValue }) => {
+        try {
+            const response = await api.post('/auth/register', userData);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || { message: 'Đăng ký thất bại' });
+        }
+    }
+);
+
 export const fetchUserProfile = createAsyncThunk(
     'auth/fetchUserProfile',
     async (_, { rejectWithValue }) => {
@@ -25,7 +36,7 @@ export const fetchUserProfile = createAsyncThunk(
             const response = await api.get('/auth/profile');
             const userData = response.data.user;
             localStorage.setItem('user', JSON.stringify(userData));
-            
+
             return userData;
         } catch (error) {
             // Nếu token không hợp lệ hoặc hết hạn
@@ -70,7 +81,7 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // Xử lý đăng nhập
+            // login
             .addCase(loginUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -86,7 +97,7 @@ const authSlice = createSlice({
                 state.error = action.payload?.message || 'Đăng nhập thất bại';
             })
 
-            // Xử lý lấy thông tin người dùng
+            // profile
             .addCase(fetchUserProfile.pending, (state) => {
                 state.loading = true;
             })
@@ -105,7 +116,20 @@ const authSlice = createSlice({
                 state.error = action.payload?.message;
             })
 
-            // Xử lý đăng xuất
+            // reg
+            .addCase(registerUser.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(registerUser.fulfilled, (state) => {
+                state.loading = false;
+            })
+            .addCase(registerUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.message || 'Đăng ký thất bại';
+            })
+
+            // logout
             .addCase(logoutUser.fulfilled, (state) => {
                 state.token = null;
                 state.user = null;

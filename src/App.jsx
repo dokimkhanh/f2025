@@ -11,6 +11,7 @@ import Contact from "./pages/Contact";
 import Account from "./pages/Account/Account";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/account" element={<PrivateRoute> <Account /> </PrivateRoute>} />
       </Routes>
     </Layout>
