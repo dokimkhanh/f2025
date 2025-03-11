@@ -14,16 +14,14 @@ const Login = () => {
   const location = useLocation();
   const { isAuthenticated, loading, error } = useSelector(selectAuth);
   
-  // Lấy đường dẫn từ state (nếu có) hoặc mặc định là trang account
   const from = location.state?.from?.pathname || '/account';
   
   useEffect(() => {
-    // Nếu đã đăng nhập, chuyển hướng đến trang đích
+    window.scrollTo(0, 0);
     if (isAuthenticated) {
       navigate(from, { replace: true });
     }
     
-    // Xóa lỗi khi component unmount
     return () => {
       dispatch(clearError());
     };

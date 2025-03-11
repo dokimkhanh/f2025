@@ -33,13 +33,12 @@ export const fetchUserProfile = createAsyncThunk(
     'auth/fetchUserProfile',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await api.get('/auth/profile');
+            const response = await api.get('/profile');
             const userData = response.data.user;
             localStorage.setItem('user', JSON.stringify(userData));
 
             return userData;
         } catch (error) {
-            // Nếu token không hợp lệ hoặc hết hạn
             if (error.response && error.response.status === 401) {
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
@@ -49,7 +48,20 @@ export const fetchUserProfile = createAsyncThunk(
     }
 );
 
-// Thunk để đăng xuất
+export const updateUserProfile = createAsyncThunk(
+    'auth/updateProfile',
+    async (userData, { rejectWithValue }) => {
+        try {
+            const response = await api.put('/profile/update', userData);
+            const updatedUser = response.data.user;
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+            return updatedUser;
+        } catch (error) {
+            return rejectWithValue(error.response?.data || { message: 'Cập nhật thông tin thất bại' });
+        }
+    }
+);
+
 export const logoutUser = createAsyncThunk(
     'auth/logout',
     async () => {
@@ -59,7 +71,7 @@ export const logoutUser = createAsyncThunk(
     }
 );
 
-// Khởi tạo state từ localStorage (nếu có)
+
 const token = localStorage.getItem('token');
 const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
 
@@ -134,6 +146,20 @@ const authSlice = createSlice({
                 state.token = null;
                 state.user = null;
                 state.isAuthenticated = false;
+            })
+
+            // update profile
+            .addCase(updateUserProfile.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateUserProfile.fulfilled, (state, action) => {
+                state.loading = false;
+                state.user = action.payload;
+            })
+            .addCase(updateUserProfile.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.message || 'Cập nhật thông tin thất bại';
             });
     }
 });

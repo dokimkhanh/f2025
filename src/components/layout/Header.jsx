@@ -7,16 +7,15 @@ import {
   Bars3Icon as MenuIcon,
   MagnifyingGlassIcon as SearchIcon,
   XMarkIcon as XIcon,
-  LockClosedIcon
+  UserCircleIcon
 } from '@heroicons/react/24/outline';
 import { toggleMenu, selectIsMenuOpen } from '../../redux/features/menuSlice';
-import { selectCartTotalQuantity } from '../../redux/features/cartSlice';
 import { selectIsAuthenticated } from '../../redux/features/authSlice';
 
 const Header = () => {
   const dispatch = useDispatch();
   const isMenuOpen = useSelector(selectIsMenuOpen);
-  // Access the cart totalQuantity directly from the state
+
   const cartQuantity = useSelector((state) => state.cart.totalQuantity);
   console.log('Cart quantity:', cartQuantity);
 
@@ -51,7 +50,7 @@ const Header = () => {
               {isAuthenticated ? (
                 <UserIcon className="h-6 w-6" />
               ) : (
-                <LockClosedIcon className="h-6 w-6" />
+                <UserCircleIcon className="h-6 w-6" />
               )}
             </Link>
             <Link to="/cart" className="p-2 hover:text-primary-600 transition-colors relative">
