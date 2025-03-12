@@ -36,6 +36,7 @@ const Account = () => {
 
     if (setDefaultAddress.fulfilled.match(resultAction)) {
       showToast('Đã đặt địa chỉ mặc định thành công', 'success');
+      dispatch(fetchUserProfile());
     } else {
       showToast('Không thể đặt địa chỉ mặc định', 'error');
     }
@@ -62,7 +63,6 @@ const Account = () => {
 
     if (deleteUserAddress.fulfilled.match(resultAction)) {
       showToast('Đã xóa địa chỉ thành công', 'success');
-      // Fetch user profile to update the addresses list
       dispatch(fetchUserProfile());
     } else {
       showToast('Không thể xóa địa chỉ', 'error');
@@ -73,7 +73,6 @@ const Account = () => {
 
   if (!user) return <div className="container mx-auto px-4 py-12">Đang tải...</div>;
 
-  // Ensure we have the correct property names
   const addresses = user.address || [];
 
   return (
