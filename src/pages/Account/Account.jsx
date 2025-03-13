@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { logoutUser, selectUser, fetchUserProfile } from '../../redux/features/authSlice';
 import ConfirmModal from '../../components/ui/ConfirmModal';
 import { useToast } from '../../context/ToastContext';
 import { setDefaultAddress, deleteUserAddress } from '../../redux/features/profileSlice';
+import api from '../../utils/axiosConfig';
 
 const Account = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const user = useSelector(selectUser);
-  const [activeTab, setActiveTab] = useState('profile');
   const { showToast } = useToast();
+  const [orders, setOrders] = useState([]);
+  const [isLoadingOrders, setIsLoadingOrders] = useState(false);
+  const [activeTab, setActiveTab] = useState('profile');
 
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
@@ -21,6 +25,63 @@ const Account = () => {
   useEffect(() => {
     dispatch(fetchUserProfile());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (activeTab === 'orders') {
+      fetchUserOrders();
+    }
+  }, [activeTab]);
+
+  const fetchUserOrders = async () => {
+    setIsLoadingOrders(true);
+    try {
+      const response = await api.get('/orders/my-orders');
+      setOrders(response.data.orders || []);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      showToast('Không thể tải đơn hàng', 'error');
+    } finally {
+      setIsLoadingOrders(false);
+    }
+  };
+
+  const getStatusBadgeClass = (status) => {
+    switch (status) {
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'processing':
+        return 'bg-blue-100 text-blue-800';
+      case 'shipped':
+        return 'bg-purple-100 text-purple-800';
+      case 'delivered':
+        return 'bg-green-100 text-green-800';
+      case 'completed':
+        return 'bg-green-100 text-green-800';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const translateStatus = (status) => {
+    switch (status) {
+      case 'pending':
+        return 'Chờ xác nhận';
+      case 'processing':
+        return 'Đang xử lý';
+      case 'shipped':
+        return 'Đang giao hàng';
+      case 'delivered':
+        return 'Đã giao hàng';
+      case 'completed':
+        return 'Hoàn thành';
+      case 'cancelled':
+        return 'Đã hủy';
+      default:
+        return status;
+    }
+  };
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -74,6 +135,100 @@ const Account = () => {
   if (!user) return <div className="container mx-auto px-4 py-12">Đang tải...</div>;
 
   const addresses = user.address || [];
+
+  // Orders Tab
+  const renderOrdersTab = () => {
+    if (isLoadingOrders) {
+      return (
+        <div className="p-6 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black mx-auto mb-4"></div>
+          <p>Đang tải đơn hàng...</p>
+        </div>
+      );
+    }
+
+    if (orders.length === 0) {
+      return (
+        <div className="p-6">
+          <h2 className="text-xl font-semibold mb-6">Đơn hàng của tôi</h2>
+          <div className="bg-gray-100 p-8 text-center rounded">
+            <p className="text-gray-600">Bạn chưa có đơn hàng nào.</p>
+            <button
+              className="mt-4 bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors"
+              onClick={() => navigate('/shop')}
+            >
+              Mua sắm ngay
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="p-6">
+        <h2 className="text-xl font-semibold mb-6">Đơn hàng của tôi</h2>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Mã đơn hàng
+                </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Ngày đặt
+                </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Tổng tiền
+                </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Trạng thái
+                </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Thanh toán
+                </th>
+                <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Chi tiết
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {orders.map((order) => (
+                <tr key={order._id} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {order.orderCode || order._id.substring(0, 8)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {new Date(order.createdAt).toLocaleDateString('vi-VN')}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {order.totalAmount?.toLocaleString('vi-VN')}₫
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusBadgeClass(order.status)}`}>
+                      {translateStatus(order.status)}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">
+                    {order.paymentMethod === 'VNPay' ? 'VNPAY' : 
+                     order.paymentMethod === 'cod' ? 'Tiền mặt khi nhận hàng' : 
+                     order.paymentMethod}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <button 
+                      onClick={() => navigate(`/order/${order._id}`)}
+                      className="text-blue-600 hover:text-blue-900"
+                    >
+                      Xem chi tiết
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -271,18 +426,7 @@ const Account = () => {
               />
               {/* Orders Tab */}
               {activeTab === 'orders' && (
-                <div className="p-6">
-                  <h2 className="text-xl font-semibold mb-6">Đơn hàng của tôi</h2>
-                  <div className="bg-gray-100 p-8 text-center rounded">
-                    <p className="text-gray-600">Bạn chưa có đơn hàng nào.</p>
-                    <button
-                      className="mt-4 bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors"
-                      onClick={() => navigate('/shop')}
-                    >
-                      Mua sắm ngay
-                    </button>
-                  </div>
-                </div>
+                renderOrdersTab()
               )}
             </div>
           </div>

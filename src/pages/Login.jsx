@@ -15,17 +15,15 @@ const Login = () => {
   const { isAuthenticated, loading, error } = useSelector(selectAuth);
   
   const from = location.state?.from?.pathname || '/account';
-  
+
   useEffect(() => {
-    window.scrollTo(0, 0);
     if (isAuthenticated) {
-      navigate(from, { replace: true });
+      const searchParams = new URLSearchParams(location.search);
+      const returnUrl = searchParams.get('returnUrl');
+      
+      navigate(returnUrl || '/');
     }
-    
-    return () => {
-      dispatch(clearError());
-    };
-  }, [isAuthenticated, navigate, from, dispatch]);
+  }, [isAuthenticated, navigate, location]);
   
   const handleChange = (e) => {
     const { name, value } = e.target;

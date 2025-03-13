@@ -4,10 +4,12 @@ import { useDispatch } from 'react-redux';
 import { addToCart } from '../../redux/slices/cartSlice';
 import RelatedProducts from '../../components/product/RelatedProducts'
 import { GetProductBySlug } from '../../services/product';
+import { useToast } from '../../context/ToastContext'; // Import the toast context
 
 const ProductDetail = () => {
     const { slug } = useParams(); // Thay đổi từ id sang slug
     const dispatch = useDispatch();
+    const { showToast } = useToast(); // Use the toast context
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -49,7 +51,7 @@ const ProductDetail = () => {
 
     const handleAddToCart = () => {
         if (!selectedSize) {
-            alert('Vui lòng chọn kích thước');
+            showToast('Vui lòng chọn kích thước', 'error');
             return;
         }
 
@@ -63,7 +65,7 @@ const ProductDetail = () => {
             quantity: quantity
         }));
 
-        alert('Sản phẩm đã được thêm vào giỏ hàng!');
+        showToast('Sản phẩm đã được thêm vào giỏ hàng!', 'success');
     };
 
     if (loading) {

@@ -7,8 +7,6 @@ import { GetAllCategories } from "../redux/slices/categorySlice";
 
 const Shop = () => {
   const { products, loading } = useSelector((state) => {
-    console.log("Redux state:", state);
-    console.log("Products from Redux:", state.product.products);
     return state.product;
   });
   const { categories } = useSelector((state) => state.category);
@@ -28,17 +26,14 @@ const Shop = () => {
 
   useEffect(() => {
     if (products && products.length > 0) {
-      console.log("Đang áp dụng bộ lọc cho", products.length, "sản phẩm");
       applyFilters();
     } else {
-      console.log("Không có sản phẩm để lọc");
       setFilteredProducts([]);
     }
   }, [products, selectedCategory, priceRange, sortOption, searchQuery]);
 
   const applyFilters = () => {
     if (!Array.isArray(products) || products.length === 0) {
-      console.log("Mảng sản phẩm không hợp lệ");
       return;
     }
 
@@ -102,7 +97,6 @@ const Shop = () => {
       default:
         break;
     }
-    console.log("Kết quả cuối cùng:", filtered.length, "sản phẩm");
     setFilteredProducts(filtered);
   };
 
@@ -344,7 +338,7 @@ const Shop = () => {
               />
               <button
                 type="submit"
-                className="bg-primary-600 text-white px-6 py-3 rounded-md font-medium hover:bg-primary-700 transition-colors"
+                className="bg-black text-white px-6 py-3 rounded-md font-medium hover:bg-gray-800 transition-colors"
               >
                 Đăng ký
               </button>

@@ -16,6 +16,11 @@ import Register from "./pages/Register";
 import { ToastProvider } from "./context/ToastContext";
 import EditAddress from "./pages/Account/EditAddress";
 import AddAddress from "./pages/Account/AddAddress";
+import CategoryPage from "./pages/CategoryPage";
+import Checkout from "./pages/Checkout/Checkout";
+import OrderSuccess from "./pages/Checkout/OrderSuccess";
+import VnpayReturn from "./pages/Checkout/VnpayReturn";
+import OrderDetail from "./pages/Order/OrderDetail";
 
 function App() {
   return (
@@ -36,6 +41,11 @@ function App() {
           <Route path="/account/edit" element={<PrivateRoute> <EditProfile /> </PrivateRoute>} />
           <Route path="/account/address/edit/:addressId" element={<EditAddress />} />
           <Route path="/account/address/add" element={<AddAddress />} />
+          <Route path="/category/:slug" element={<CategoryPage />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/order-success" element={<OrderSuccess />} />
+          <Route path="/order/vnpay_return" element={<VnpayReturn />} />
+          <Route path="/order/:orderId" element={<OrderDetail />} />
         </Routes>
       </Layout>
     </ToastProvider>

@@ -140,9 +140,9 @@ const Cart = () => {
               <p className="text-gray-500 text-sm mt-1">Đã bao gồm VAT (nếu có)</p>
             </div>
             
-            <button className="w-full mt-6 px-6 py-3 bg-black text-white rounded-md font-medium hover:bg-gray-800 transition-colors">
+            <Link to="/checkout" className="w-full mt-6 px-6 py-3 bg-black text-white rounded-md font-medium hover:bg-gray-800 transition-colors text-center block">
               Tiến hành thanh toán
-            </button>
+            </Link>
           </div>
         </div>
       </div>
