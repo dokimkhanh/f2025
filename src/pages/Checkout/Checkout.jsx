@@ -21,7 +21,6 @@ const Checkout = () => {
   }, [dispatch]);
   
   useEffect(() => {
-    // Set default address if available
     if (user && user.address && user.address.length > 0) {
       setSelectedAddress(user.address[0]._id);
     }

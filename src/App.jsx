@@ -21,6 +21,7 @@ import Checkout from "./pages/Checkout/Checkout";
 import OrderSuccess from "./pages/Checkout/OrderSuccess";
 import VnpayReturn from "./pages/Checkout/VnpayReturn";
 import OrderDetail from "./pages/Order/OrderDetail";
+import Wishlist from "./pages/Wishlist/Wishlist";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="/order/vnpay_return" element={<VnpayReturn />} />
           <Route path="/order/:orderId" element={<OrderDetail />} />
+          <Route path="/wishlist" element={<Wishlist />} />
         </Routes>
       </Layout>
     </ToastProvider>

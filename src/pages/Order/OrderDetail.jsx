@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useToast } from '../../context/ToastContext';
 import api from '../../utils/axiosConfig';
 
@@ -14,7 +14,7 @@ const OrderDetail = () => {
     const fetchOrderDetails = async () => {
       try {
         const response = await api.get(`/orders/${orderId}`);
-        setOrder(response.data.order);
+        setOrder(response.data);
       } catch (error) {
         console.error('Error fetching order details:', error);
         showToast('Không thể tải thông tin đơn hàng', 'error');
@@ -153,35 +153,42 @@ const OrderDetail = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {order.products.map((item, index) => (
-                    <tr key={index}>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          {item.product.images && item.product.images[0] && (
-                            <img 
-                              src={item.product.images[0]} 
-                              alt={item.product.name} 
-                              className="h-16 w-16 object-cover mr-4"
-                            />
-                          )}
-                          <div>
-                            <div className="font-medium text-gray-900">{item.product.name}</div>
-                            {item.size && <div className="text-sm text-gray-500">Size: {item.size}</div>}
-                            {item.color && <div className="text-sm text-gray-500">Màu: {item.color}</div>}
+                  {order.products.map((item, index) => {
+                    const product = item.product;
+                    const selectedSize = product.sizes.find(size => size.size === item.size) || product.sizes[0];
+
+                    return (
+                      <tr key={index}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            {selectedSize && selectedSize.imageUrl && (
+                              <img 
+                                src={selectedSize.imageUrl} 
+                                alt={product.name} 
+                                className="h-16 w-16 object-cover mr-4"
+                              />
+                            )}
+                            <div>
+                              <Link to={`/product/${product.slug}`} className="font-medium text-gray-900 hover:underline">
+                                {product.name}
+                              </Link>
+                              {item.size && <div className="text-sm text-gray-500">Size: {item.size}</div>}
+                              {item.color && <div className="text-sm text-gray-500">Màu: {item.color}</div>}
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {item.product.price?.toLocaleString('vi-VN')}₫
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {item.quantity}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
-                        {(item.product.price * item.quantity)?.toLocaleString('vi-VN')}₫
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {selectedSize ? selectedSize.price.toLocaleString('vi-VN') : 'N/A'}₫
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {item.quantity}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
+                          {(selectedSize ? selectedSize.price * item.quantity : 0).toLocaleString('vi-VN')}₫
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
                 <tfoot className="bg-gray-50">
                   <tr>

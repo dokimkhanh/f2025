@@ -4,12 +4,12 @@ import { useDispatch } from 'react-redux';
 import { addToCart } from '../../redux/slices/cartSlice';
 import RelatedProducts from '../../components/product/RelatedProducts'
 import { GetProductBySlug } from '../../services/product';
-import { useToast } from '../../context/ToastContext'; // Import the toast context
+import { useToast } from '../../context/ToastContext';
 
 const ProductDetail = () => {
-    const { slug } = useParams(); // Thay đổi từ id sang slug
+    const { slug } = useParams(); 
     const dispatch = useDispatch();
-    const { showToast } = useToast(); // Use the toast context
+    const { showToast } = useToast(); 
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -28,7 +28,6 @@ const ProductDetail = () => {
                 const data = await GetProductBySlug(slug);
             
                 setProduct(data);
-                // Nếu có sizes, chọn size đầu tiên làm mặc định
                 if (data.sizes && data.sizes.length > 0) {
                     setSelectedSize(data.sizes[0].size);
                     setSelectedSizeData(data.sizes[0]);

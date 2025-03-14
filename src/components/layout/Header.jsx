@@ -7,7 +7,8 @@ import {
   Bars3Icon as MenuIcon,
   MagnifyingGlassIcon as SearchIcon,
   XMarkIcon as XIcon,
-  UserCircleIcon
+  UserCircleIcon,
+  HeartIcon
 } from '@heroicons/react/24/outline';
 import { toggleMenu, selectIsMenuOpen } from '../../redux/features/menuSlice';
 import { selectIsAuthenticated } from '../../redux/features/authSlice';
@@ -17,7 +18,7 @@ const Header = () => {
   const isMenuOpen = useSelector(selectIsMenuOpen);
 
   const cartQuantity = useSelector((state) => state.cart.totalQuantity);
-  console.log('Cart quantity:', cartQuantity);
+  const wishlistQuantity = useSelector((state) => state.wishlist.items.length);
 
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
@@ -51,6 +52,14 @@ const Header = () => {
                 <UserIcon className="h-6 w-6" />
               ) : (
                 <UserCircleIcon className="h-6 w-6" />
+              )}
+            </Link>
+            <Link to="/wishlist" className="p-2 hover:text-primary-600 transition-colors relative">
+              <HeartIcon className="h-6 w-6" />
+              {wishlistQuantity > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center z-10">
+                  {wishlistQuantity}
+                </span>
               )}
             </Link>
             <Link to="/cart" className="p-2 hover:text-primary-600 transition-colors relative">

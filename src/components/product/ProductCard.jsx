@@ -1,7 +1,14 @@
 // src/components/product/ProductCard.jsx
 import { Link } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../redux/slices/cartSlice';
+import { addToWishlist } from '../../redux/slices/wishlistSlice';
+import { useToast } from '../../context/ToastContext';
 
 const ProductCard = ({ product }) => {
+  const dispatch = useDispatch();
+  const { showToast } = useToast();
+
   // Get the lowest price from sizes array
   const getLowestPrice = () => {
     if (!product.sizes || product.sizes.length === 0) return 0;
@@ -23,6 +30,24 @@ const ProductCard = ({ product }) => {
     ? product.sizes[0].imageUrl 
     : 'https://via.placeholder.com/300';
 
+  const handleAddToWishlist = () => {
+    dispatch(addToWishlist(product));
+    showToast('Sản phẩm đã được thêm vào danh sách yêu thích!', 'success');
+  };
+
+  const handleAddToCart = () => {
+    const selectedSize = product.sizes[0]; // Default to first size for simplicity
+    dispatch(addToCart({
+      id: product._id,
+      name: product.name,
+      price: selectedSize.price,
+      image: selectedSize.imageUrl,
+      size: selectedSize.size,
+      quantity: 1
+    }));
+    showToast('Sản phẩm đã được thêm vào giỏ hàng!', 'success');
+  };
+
   return (
     <div className="group relative">
       {/* Product Image */}
@@ -38,7 +63,7 @@ const ProductCard = ({ product }) => {
         {/* Quick actions */}
         <div className="absolute bottom-4 left-0 right-0 flex justify-center opacity-0 transition-opacity group-hover:opacity-100">
           <div className="flex space-x-2 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md">
-            <button className="p-2 rounded-full hover:bg-gray-100">
+            <button className="p-2 rounded-full hover:bg-gray-100" onClick={handleAddToWishlist}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -54,7 +79,7 @@ const ProductCard = ({ product }) => {
                 />
               </svg>
             </button>
-            <button className="p-2 rounded-full hover:bg-gray-100">
+            <button className="p-2 rounded-full hover:bg-gray-100" onClick={handleAddToCart}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
