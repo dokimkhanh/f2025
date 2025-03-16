@@ -64,7 +64,8 @@ export const updateUserProfile = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk(
     'auth/logout',
-    async () => {
+    async (_, { dispatch }) => {
+
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         return null;

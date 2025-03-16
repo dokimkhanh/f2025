@@ -23,13 +23,17 @@ import VnpayReturn from "./pages/Checkout/VnpayReturn";
 import OrderDetail from "./pages/Order/OrderDetail";
 import Wishlist from "./pages/Wishlist/Wishlist";
 
+// Admin imports
+import AdminLayout from "./components/admin/AdminLayout";
+import Dashboard from "./pages/Admin/Dashboard";
+
 function App() {
   return (
     <ToastProvider>
       <Layout>
         <Routes>
-          <Route path="/" element={<Home />} />
           {/* Thêm các route khác ở đây */}
+          <Route path="/" element={<Home />} />
           <Route path="/product/:slug" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/collections" element={<Collections />} />
@@ -48,6 +52,12 @@ function App() {
           <Route path="/order/vnpay_return" element={<VnpayReturn />} />
           <Route path="/order/:orderId" element={<OrderDetail />} />
           <Route path="/wishlist" element={<Wishlist />} />
+
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+          </Route>
+
         </Routes>
       </Layout>
     </ToastProvider>

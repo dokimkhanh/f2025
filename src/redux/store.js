@@ -1,11 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import menuReducer from './features/menuSlice';
 import cartReducer from './slices/cartSlice';
-import productReducer from './slices/productSlice'
-import categoryReducer from './slices/categorySlice'
+import productReducer from './slices/productSlice';
+import categoryReducer from './slices/categorySlice';
 import authReducer from './features/authSlice';
 import profileReducer from './features/profileSlice';
 import wishlistReducer from './slices/wishlistSlice';
+import dashboardReducer from './slices/dashboardSlice';
 
 export const store = configureStore({
     reducer: {
@@ -16,5 +17,6 @@ export const store = configureStore({
         auth: authReducer,
         profile: profileReducer,
         wishlist: wishlistReducer,
+        dashboard: dashboardReducer,
     },
 });
