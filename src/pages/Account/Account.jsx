@@ -239,7 +239,7 @@ const Account = () => {
           {/* Sidebar */}
           <div className="md:w-1/4">
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="p-4 bg-gray-50 border-b">
+              <div className="p-4 bg-gray-50">
                 <h2 className="font-semibold">Xin chào, {user.fullname || 'Khách hàng'}</h2>
                 <p className="text-sm text-gray-600">{user.email}</p>
               </div>

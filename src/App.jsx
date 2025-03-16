@@ -30,9 +30,9 @@ import Dashboard from "./pages/Admin/Dashboard";
 function App() {
   return (
     <ToastProvider>
-      <Layout>
-        <Routes>
-          {/* Thêm các route khác ở đây */}
+      <Routes>
+        {/* Customer Routes with Layout */}
+        <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/product/:slug" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
@@ -52,14 +52,14 @@ function App() {
           <Route path="/order/vnpay_return" element={<VnpayReturn />} />
           <Route path="/order/:orderId" element={<OrderDetail />} />
           <Route path="/wishlist" element={<Wishlist />} />
+        </Route>
 
-          {/* Admin Routes */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-          </Route>
-
-        </Routes>
-      </Layout>
+        {/* Admin Routes with AdminLayout */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+        </Route>
+        
+      </Routes>
     </ToastProvider>
   );
 }
