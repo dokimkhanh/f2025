@@ -8,8 +8,8 @@ import Collections from "./pages/Collections";
 import Shop from "./pages/Shop";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import Account from "./pages/Account/Account";
 import EditProfile from "./pages/Account/EditProfile";
+import Account from "./pages/Account/Account";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -26,6 +26,9 @@ import Wishlist from "./pages/Wishlist/Wishlist";
 // Admin imports
 import AdminLayout from "./components/admin/AdminLayout";
 import Dashboard from "./pages/Admin/Dashboard";
+import ProductsManagement from "./pages/Admin/ProductsManagement";
+import AddProduct from "./pages/Admin/AddProduct";
+import EditProduct from "./pages/Admin/EditProduct";
 
 function App() {
   return (
@@ -57,6 +60,9 @@ function App() {
         {/* Admin Routes with AdminLayout */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
+          <Route path="products" element={<ProductsManagement />} />
+          <Route path="products/add" element={<AddProduct />} />
+          <Route path="products/edit/:productId" element={<EditProduct />} />
         </Route>
         
       </Routes>
