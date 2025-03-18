@@ -63,9 +63,24 @@ const ProductsManagement = () => {
 
   const toggleProductStatus = async (productId, currentStatus) => {
     try {
-      await api.patch(`/products/${productId}/status`, {
+      // Tìm sản phẩm hiện tại từ danh sách sản phẩm
+      const currentProduct = products.find(product => product._id === productId);
+      
+      if (!currentProduct) {
+        showToast('Không tìm thấy thông tin sản phẩm', 'error');
+        return;
+      }
+      
+      const updateData = {
+        name: currentProduct.name,
+        description: currentProduct.description,
+        category: currentProduct.category?._id || currentProduct.category,
+        stock: currentProduct.stock,
+        sizes: currentProduct.sizes,
         isActive: !currentStatus
-      });
+      };
+      
+      await api.put(`/products/${productId}`, updateData);
       showToast('Đã cập nhật trạng thái sản phẩm', 'success');
       fetchProducts(); // Refresh the product list
     } catch (error) {
@@ -183,7 +198,7 @@ const ProductsManagement = () => {
                           {product.isActive ? 'Ngừng bán' : 'Kích hoạt'}
                         </button>
                         <Link
-                          to={`/admin/products/edit/${product._id}`}
+                          to={`/admin/products/edit/${product.slug}`}
                           className="text-indigo-600 hover:text-indigo-900"
                         >
                           Sửa
