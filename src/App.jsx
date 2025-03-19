@@ -13,6 +13,7 @@ import Account from "./pages/Account/Account";
 import PrivateRoute from "./components/auth/PrivateRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import AccountLocked from "./components/auth/AccountLocked";
 import { ToastProvider } from "./context/ToastContext";
 import EditAddress from "./pages/Account/EditAddress";
 import AddAddress from "./pages/Account/AddAddress";
@@ -32,6 +33,9 @@ import EditProduct from "./pages/Admin/EditProduct";
 import CategoriesManagement from "./pages/Admin/CategoriesManagement";
 import AddCategory from "./pages/Admin/AddCategory";
 import EditCategory from "./pages/Admin/EditCategory";
+import UsersManagement from "./pages/Admin/UsersManagement";
+import AddUser from "./pages/Admin/AddUser";
+import EditUser from "./pages/Admin/EditUser";
 
 function App() {
   return (
@@ -48,6 +52,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/account-locked" element={<AccountLocked />} />
           <Route path="/account" element={<PrivateRoute> <Account /> </PrivateRoute>} />
           <Route path="/account/edit" element={<PrivateRoute> <EditProfile /> </PrivateRoute>} />
           <Route path="/account/address/edit/:addressId" element={<EditAddress />} />
@@ -69,6 +74,9 @@ function App() {
           <Route path="categories" element={<CategoriesManagement />} />
           <Route path="categories/add" element={<AddCategory />} />
           <Route path="categories/edit/:slug" element={<EditCategory />} />
+          <Route path="users" element={<UsersManagement />} />
+          <Route path="users/add" element={<AddUser />} />
+          <Route path="users/edit/:userId" element={<EditUser />} />
         </Route>
         
       </Routes>

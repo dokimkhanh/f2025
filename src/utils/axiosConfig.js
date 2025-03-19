@@ -30,6 +30,24 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
+    // Xử lý lỗi tài khoản bị khóa
+    if (error.response && 
+        error.response.status === 403 && 
+        error.response.data.message === "Tài khoản của bạn đã bị khóa") {
+      
+      // Đảm bảo xóa token và user data trước
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      
+      // Sau đó dispatch action logout để cập nhật state
+      store.dispatch(logoutUser());
+      
+      // Chuyển hướng đến trang tài khoản bị khóa
+      window.location.href = '/account-locked';
+      return Promise.reject(error);
+    }
+    
+    // Xử lý lỗi token không hợp lệ
     if (error.response && 
         error.response.status === 401 && 
         (error.response.data.message === "Token không hợp lệ" || 

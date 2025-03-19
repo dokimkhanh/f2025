@@ -12,18 +12,26 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, loading, error } = useSelector(selectAuth);
+  const { isAuthenticated, loading, error, user } = useSelector(selectAuth);
   
   const from = location.state?.from?.pathname || '/account';
 
   useEffect(() => {
-    if (isAuthenticated) {
+    // Kiểm tra nếu có lỗi tài khoản bị khóa
+    if (error === 'Tài khoản của bạn đã bị khóa') {
+      navigate('/account-locked');
+      return;
+    }
+
+    if (isAuthenticated && (!user || user.status !== 'locked')) {
       const searchParams = new URLSearchParams(location.search);
       const returnUrl = searchParams.get('returnUrl');
       
       navigate(returnUrl || '/');
+    } else if (isAuthenticated && user && user.status === 'locked') {
+      navigate('/account-locked');
     }
-  }, [isAuthenticated, navigate, location]);
+  }, [isAuthenticated, navigate, location, error, user]);
   
   const handleChange = (e) => {
     const { name, value } = e.target;

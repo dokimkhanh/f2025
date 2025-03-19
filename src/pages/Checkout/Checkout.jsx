@@ -20,6 +20,13 @@ const Checkout = () => {
     dispatch(fetchUserProfile());
   }, [dispatch]);
   
+  // Kiểm tra nếu tài khoản bị khóa
+  useEffect(() => {
+    if (user && user.status === 'locked') {
+      navigate('/account-locked');
+    }
+  }, [user, navigate]);
+  
   useEffect(() => {
     if (user && user.address && user.address.length > 0) {
       setSelectedAddress(user.address[0]._id);

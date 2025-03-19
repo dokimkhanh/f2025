@@ -100,9 +100,18 @@ const authSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.token = action.payload.token;
-                state.user = action.payload.user;
-                state.isAuthenticated = true;
+                
+                // Kiểm tra nếu tài khoản bị khóa
+                if (action.payload.user && action.payload.user.status === 'locked') {
+                    state.token = action.payload.token;
+                    state.user = action.payload.user;
+                    state.isAuthenticated = true;
+                    state.error = 'Tài khoản của bạn đã bị khóa';
+                } else {
+                    state.token = action.payload.token;
+                    state.user = action.payload.user;
+                    state.isAuthenticated = true;
+                }
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
