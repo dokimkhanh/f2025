@@ -21,6 +21,7 @@ const AdminLayout = () => {
   const menuItems = [
     { name: 'Dashboard', icon: HomeIcon, path: '/admin' },
     { name: 'Sản phẩm', icon: ShoppingBagIcon, path: '/admin/products' },
+    { name: 'Danh mục', icon: TagIcon, path: '/admin/categories' },
     { name: 'Đơn hàng', icon: TagIcon, path: '/admin/orders' },
     { name: 'Người dùng', icon: UserGroupIcon, path: '/admin/users' },
   ];

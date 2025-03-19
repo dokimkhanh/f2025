@@ -129,7 +129,7 @@ const Home = () => {
                   </div>
                 ))
               ) : (
-                categories && categories.map((category) => (
+                Array.isArray(categories) && categories.map((category) => (
                   <Link
                     key={category._id}
                     to={`/category/${category.slug}`}
@@ -200,7 +200,7 @@ const Home = () => {
               Bộ sưu tập mới
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
-              {categories.slice(0, 2).map((category) => (
+              {Array.isArray(categories) && categories.slice(0, 2).map((category) => (
                 <div
                   key={category._id}
                   className="relative overflow-hidden rounded-lg group"

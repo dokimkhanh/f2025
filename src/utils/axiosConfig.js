@@ -30,18 +30,19 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Nếu lỗi là token không hợp lệ (401)
     if (error.response && 
         error.response.status === 401 && 
         (error.response.data.message === "Token không hợp lệ" || 
          error.response.data.message === "Không tìm thấy token")) {
       
-      // Đăng xuất người dùng
+      // Đảm bảo xóa token và user data trước
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      
+      // Sau đó dispatch action logout để cập nhật state
       store.dispatch(logoutUser());
       
-      // Chuyển hướng đến trang đăng nhập
       if (window.location.pathname !== '/login') {
-        // Lưu URL hiện tại để sau khi đăng nhập có thể quay lại
         const returnUrl = window.location.pathname + window.location.search;
         window.location.href = `/login?returnUrl=${encodeURIComponent(returnUrl)}`;
       }

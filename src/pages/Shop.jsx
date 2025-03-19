@@ -180,7 +180,7 @@ const Shop = () => {
                       />
                       <label htmlFor="all-categories">Tất cả danh mục</label>
                     </div>
-                    {categories && categories.map((category) => (
+                    {Array.isArray(categories) && categories.map((category) => (
                       <div key={category._id} className="flex items-center">
                         <input
                           type="radio"

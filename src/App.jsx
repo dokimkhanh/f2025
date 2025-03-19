@@ -29,6 +29,9 @@ import Dashboard from "./pages/Admin/Dashboard";
 import ProductsManagement from "./pages/Admin/ProductsManagement";
 import AddProduct from "./pages/Admin/AddProduct";
 import EditProduct from "./pages/Admin/EditProduct";
+import CategoriesManagement from "./pages/Admin/CategoriesManagement";
+import AddCategory from "./pages/Admin/AddCategory";
+import EditCategory from "./pages/Admin/EditCategory";
 
 function App() {
   return (
@@ -63,6 +66,9 @@ function App() {
           <Route path="products" element={<ProductsManagement />} />
           <Route path="products/add" element={<AddProduct />} />
           <Route path="products/edit/:productSlug" element={<EditProduct />} />
+          <Route path="categories" element={<CategoriesManagement />} />
+          <Route path="categories/add" element={<AddCategory />} />
+          <Route path="categories/edit/:slug" element={<EditCategory />} />
         </Route>
         
       </Routes>
