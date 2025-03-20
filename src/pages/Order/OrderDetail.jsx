@@ -14,7 +14,7 @@ const OrderDetail = () => {
     const fetchOrderDetails = async () => {
       try {
         const response = await api.get(`/orders/${orderId}`);
-        setOrder(response.data);
+        setOrder(response.data.order);
       } catch (error) {
         console.error('Error fetching order details:', error);
         showToast('Không thể tải thông tin đơn hàng', 'error');

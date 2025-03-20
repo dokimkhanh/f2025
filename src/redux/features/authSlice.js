@@ -38,9 +38,13 @@ export const fetchUserProfile = createAsyncThunk(
 
             return userData;
         } catch (error) {
-            if (error.response && error.response.status === 401) {
+            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
+                // Chuyển hướng người dùng đến trang đăng nhập khi token hết hạn hoặc không hợp lệ
+                if (typeof window !== 'undefined') {
+                    window.location.href = '/login';
+                }
             }
             return rejectWithValue(error.response?.data || { message: 'Không thể lấy thông tin người dùng' });
         }

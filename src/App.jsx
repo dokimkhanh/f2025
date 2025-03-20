@@ -20,8 +20,9 @@ import AddAddress from "./pages/Account/AddAddress";
 import CategoryPage from "./pages/CategoryPage";
 import Checkout from "./pages/Checkout/Checkout";
 import OrderSuccess from "./pages/Checkout/OrderSuccess";
-import VnpayReturn from "./pages/Checkout/VnpayReturn";
 import OrderDetail from "./pages/Order/OrderDetail";
+import VnpayReturn from "./pages/Checkout/VnpayReturn";
+import ErrorBoundary from "./components/ui/ErrorBoundary";
 import Wishlist from "./pages/Wishlist/Wishlist";
 
 // Admin imports
@@ -36,6 +37,8 @@ import EditCategory from "./pages/Admin/EditCategory";
 import UsersManagement from "./pages/Admin/UsersManagement";
 import AddUser from "./pages/Admin/AddUser";
 import EditUser from "./pages/Admin/EditUser";
+import OrdersManagement from "./pages/Admin/OrdersManagement";
+import AdminOrderDetail from "./pages/Admin/AdminOrderDetail";
 
 function App() {
   return (
@@ -77,6 +80,8 @@ function App() {
           <Route path="users" element={<UsersManagement />} />
           <Route path="users/add" element={<AddUser />} />
           <Route path="users/edit/:userId" element={<EditUser />} />
+          <Route path="orders" element={<OrdersManagement />} />
+          <Route path="order/:orderId" element={<AdminOrderDetail />} />
         </Route>
         
       </Routes>
