@@ -17,10 +17,10 @@ const CategoryPage = () => {
         setLoading(true);
         // First, get the category by slug
         const categoryData = await GetCategoryBySlug(slug);
-        setCategory(categoryData);
+        setCategory(categoryData.category);
 
         // Then, get all products in this category
-        const productsData = await GetProductsByCategory(categoryData._id);
+        const productsData = await GetProductsByCategory(categoryData.category._id);
         setProducts(productsData.products);
         setLoading(false);
       } catch (err) {

@@ -16,6 +16,7 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [orderPlaced, setOrderPlaced] = useState(false);
 
   useEffect(() => {
     dispatch(fetchUserProfile());
@@ -34,10 +35,10 @@ const Checkout = () => {
   }, [user]);
 
   useEffect(() => {
-    if (items.length === 0) {
+    if (items.length === 0 && !orderPlaced) {
       navigate('/cart');
     }
-  }, [items, navigate]);
+  }, [items, navigate, orderPlaced]);
 
   const handlePaymentMethodChange = (method) => {
     setPaymentMethod(method);
@@ -107,6 +108,7 @@ const Checkout = () => {
 
         if (response.data) {
           showToast('Đặt hàng thành công! Cảm ơn bạn đã mua hàng.', 'success');
+          setOrderPlaced(true);
           navigate('/order-success');
           dispatch(clearCart());
         }

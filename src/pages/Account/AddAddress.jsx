@@ -21,7 +21,7 @@ const AddAddress = () => {
       
       if (addUserAddress.fulfilled.match(resultAction)) {
         showToast('Thêm địa chỉ thành công!', 'success');
-        navigate('/account');
+        navigate('/account?tab=addresses');
       } else {
         setError(resultAction.payload?.message || 'Thêm địa chỉ thất bại');
         showToast('Thêm địa chỉ thất bại', 'error');
@@ -35,7 +35,7 @@ const AddAddress = () => {
   };
 
   const handleCancel = () => {
-    navigate('/account');
+    navigate('/account?tab=addresses');
   };
 
   return (

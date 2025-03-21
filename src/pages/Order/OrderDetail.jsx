@@ -246,25 +246,7 @@ const OrderDetail = () => {
             </div>
           </div>
 
-          {order.status === 'pending' && (
-            <div className="p-6 border-t">
-              <button 
-                onClick={async () => {
-                  try {
-                    await api.post(`/orders/${order._id}/cancel`);
-                    showToast('Đơn hàng đã được hủy thành công', 'success');
-                    navigate('/account?tab=orders');
-                  } catch (error) {
-                    console.error('Error cancelling order:', error);
-                    showToast('Không thể hủy đơn hàng', 'error');
-                  }
-                }}
-                className="px-6 py-3 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition-colors"
-              >
-                Hủy đơn hàng
-              </button>
-            </div>
-          )}
+          
         </div>
       </div>
     </div>

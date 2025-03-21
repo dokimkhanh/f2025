@@ -6,6 +6,7 @@ import ConfirmModal from '../../components/ui/ConfirmModal';
 import { useToast } from '../../context/ToastContext';
 import { setDefaultAddress, deleteUserAddress } from '../../redux/features/profileSlice';
 import api from '../../utils/axiosConfig';
+import Pagination from '../../components/ui/Pagination';
 
 const Account = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,19 @@ const Account = () => {
   const [orders, setOrders] = useState([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [ordersPerPage] = useState(5);
+
+  // Đọc tham số tab từ URL khi component được tải
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tabParam = params.get('tab');
+    
+    // Chỉ cập nhật nếu tham số tab hợp lệ (profile, addresses, orders)
+    if (tabParam && ['profile', 'addresses', 'orders'].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [location.search]);
 
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
@@ -164,6 +178,17 @@ const Account = () => {
       );
     }
 
+    // Tính toán phân trang
+    const indexOfLastOrder = currentPage * ordersPerPage;
+    const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+    const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+    const totalPages = Math.ceil(orders.length / ordersPerPage);
+
+    // Xử lý khi chuyển trang
+    const handlePageChange = (pageNumber) => {
+      setCurrentPage(pageNumber);
+    };
+
     return (
       <div className="p-6">
         <h2 className="text-xl font-semibold mb-6">Đơn hàng của tôi</h2>
@@ -192,7 +217,7 @@ const Account = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {orders.map((order) => (
+              {currentOrders.map((order) => (
                 <tr key={order._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {order.orderCode || order._id.substring(0, 8)}
@@ -225,6 +250,22 @@ const Account = () => {
               ))}
             </tbody>
           </table>
+          
+          {/* Phân trang */}
+          {orders.length > 0 && (
+            <div className="mt-4">
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-gray-600">
+                  Hiển thị {indexOfFirstOrder + 1}-{Math.min(indexOfLastOrder, orders.length)} trên tổng số {orders.length} đơn hàng
+                </p>
+                <Pagination 
+                  currentPage={currentPage} 
+                  totalPages={totalPages} 
+                  onPageChange={handlePageChange} 
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );

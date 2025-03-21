@@ -38,14 +38,12 @@ const Shop = () => {
     }
 
     let filtered = [...products];
-    console.log("Bắt đầu lọc với", filtered.length, "sản phẩm");
 
     // Apply category filter
     if (selectedCategory) {
       filtered = filtered.filter(product => 
         product.category && product.category._id === selectedCategory
       );
-      console.log("Sau khi lọc danh mục:", filtered.length, "sản phẩm");
     }
 
     // Apply price range filter - Sửa lại phần này
@@ -57,7 +55,6 @@ const Shop = () => {
       }
       return false; // Loại bỏ sản phẩm không có giá hợp lệ
     });
-    console.log("Sau khi lọc giá:", filtered.length, "sản phẩm");
 
     // Apply search query
     if (searchQuery) {
@@ -66,7 +63,6 @@ const Shop = () => {
         product.name.toLowerCase().includes(query) || 
         (product.description && product.description.toLowerCase().includes(query))
       );
-      console.log("Sau khi tìm kiếm:", filtered.length, "sản phẩm");
     }
 
     // Apply sorting
